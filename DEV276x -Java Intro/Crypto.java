@@ -8,8 +8,7 @@ public class Crypto {
     }
 
     private static String normalizeText(String text) {
-        String normalized = text.replace(" ", "");
-        return normalized.replaceAll("[^a-zA-Z]", "").toUpperCase();
+        return text.replaceAll("[^a-zA-Z]", "").toUpperCase();
     }
 
 }
