@@ -10,7 +10,9 @@ public class Crypto {
         int size = input.nextInt();
 
         String encryptedText = encrypt(text, shift, size);
-        String decryptedText = decrypt(text, shift, size);
+        System.out.println(encryptedText);
+        String decryptedText = decrypt(encryptedText, shift * -1);
+        System.out.println(decryptedText);
     }
 
     private static String normalizeText(String text) {
@@ -22,7 +24,8 @@ public class Crypto {
         int i = 0;
         while (i < text.length()) {
             String ch = Character.toString(text.charAt(i));
-            if (ch.contains("A") || ch.contains("E") || ch.contains("I") || ch.contains("O") || ch.contains("U")) {
+            if (ch.contains("A") || ch.contains("E") || ch.contains("I") || ch.contains("O") || ch.contains("U")
+                    || ch.contains("Y")) {
                 Obfus += "OB";
             }
             Obfus += text.charAt(i);
@@ -32,11 +35,39 @@ public class Crypto {
     }
 
     private static String Unobfuscation(String text) {
-        return text.replaceAll("OB", "");
+        return text.replaceAll("(OB)([AEIOUY])", "$2");
+    }
+
+    private static String shiftAlphabet(int shift) {
+        int start = 0;
+        if (shift < 0) {
+            start = (int) 'Z' + shift + 1;
+        } else {
+            start = 'A' + shift;
+        }
+        String result = "";
+        char currChar = (char) start;
+        for(; currChar <= 'Z'; ++currChar) {
+            result = result + currChar;
+        }
+        if(result.length() < 26) {
+            for(currChar = 'A'; result.length() < 26; ++currChar) {
+                result = result + currChar;
+            }
+        }
+        return result;
     }
 
     private static String caesarify(String text, int shift) {
+        String cipher = "";
+        String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String newKeys = shiftAlphabet(shift);
 
+        for (int i = 0; i < text.length(); i++) {
+            int index = alpha.indexOf(text.charAt(i)); // get original index
+            cipher += newKeys.charAt(index); // add shifted to cipher result
+        }
+        return cipher;
     }
 
     private static String Codegroups(String text, int size) {
@@ -62,14 +93,13 @@ public class Crypto {
         String normalize = normalizeText(text);
         String obf = Obfuscation(normalize);
         String encrypted = caesarify(obf, shift);
-        String split = Codegroups(encrypted, size);
-        return split;
+        return Codegroups(encrypted, size);
     }
 
-    private static String decrypt(String text, int shift, int size) {
-        String join = text.replaceAll(" ", ""); // join chunk into single string
-        String decrypted = caesarify(join, shift * -1); // decrypt
-        String uobf = Unobfuscation(decrypted); // remove obfuscation
-        return uobf.replaceAll("x", ""); // cleanup
+    private static String decrypt(String text, int shift) {
+        String cleanup = text.replaceAll("x", "");
+        String join = cleanup.replaceAll(" ", ""); // join chunk into single string
+        String decrypted = caesarify(join, shift); // decrypt
+        return Unobfuscation(decrypted); // remove obfuscation
     }
 }
