@@ -70,6 +70,6 @@ public class Crypto {
         String join = Codegroups(text, size);
         String decrypted = caesarify(join, shift * -1);
         String uobf = Unobfuscation(decrypted);
-        return uobf;
+        return uobf.replaceAll("x", "");
     }
 }
