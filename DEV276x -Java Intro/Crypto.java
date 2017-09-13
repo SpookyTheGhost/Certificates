@@ -67,9 +67,9 @@ public class Crypto {
     }
 
     private static String decrypt(String text, int shift, int size) {
-        String join = Codegroups(text, size);
-        String decrypted = caesarify(join, shift * -1);
-        String uobf = Unobfuscation(decrypted);
-        return uobf.replaceAll("x", "");
+        String join = text.replaceAll(" ", ""); // join chunk into single string
+        String decrypted = caesarify(join, shift * -1); // decrypt
+        String uobf = Unobfuscation(decrypted); // remove obfuscation
+        return uobf.replaceAll("x", ""); // cleanup
     }
 }
