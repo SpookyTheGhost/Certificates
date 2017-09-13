@@ -28,5 +28,24 @@ public class Crypto {
     private static String Unobfuscation(String text) {
         return text.replaceAll("OB", "");
     }
+    
+    private static String Codegroups(String text, int size) {
+        String temp = "";
+
+        if (text.length() == 0) {
+            return text;
+        }
+
+        for (int i = 0; i <= text.length()/size; i++) {
+            int chunk = Math.min((1 + i) * size, text.length());
+            String piece = text.substring(i*size, chunk);
+            if (piece.length() != 0 && piece.length() < size) {
+                piece += "x";
+            }
+            temp += piece;
+            temp += " ";
+        }
+        return temp;
+    }
 }
  
