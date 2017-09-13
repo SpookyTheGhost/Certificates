@@ -2,15 +2,21 @@ import java.util.*;
 public class Crypto {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        System.out.println("Enter text to encrypt: ");
         String text = input.nextLine();
-        String normalize = normalizeText(text);
-        System.out.println(normalize);
+        System.out.println("Enter integer shift value: ");
+        int shift = input.nextInt();
+        System.out.println("Enter chunking size: ");
+        int size = input.nextInt();
+
+        String encryptedText = encrypt(text, shift, size);
+        String decryptedText = decrypt(text, shift, size);
     }
 
     private static String normalizeText(String text) {
         return text.replaceAll("[^a-zA-Z]", "").toUpperCase();
     }
-    
+
     private static String Obfuscation(String text) {
         String Obfus = "";
         int i = 0;
@@ -28,7 +34,11 @@ public class Crypto {
     private static String Unobfuscation(String text) {
         return text.replaceAll("OB", "");
     }
-    
+
+    private static String caesarify(String text, int shift) {
+
+    }
+
     private static String Codegroups(String text, int size) {
         String temp = "";
 
@@ -47,5 +57,19 @@ public class Crypto {
         }
         return temp;
     }
+
+    private static String encrypt(String text, int shift, int size) {
+        String normalize = normalizeText(text);
+        String obf = Obfuscation(normalize);
+        String encrypted = caesarify(obf, shift);
+        String split = Codegroups(encrypted, size);
+        return split;
+    }
+
+    private static String decrypt(String text, int shift, int size) {
+        String join = Codegroups(text, size);
+        String decrypted = caesarify(join, shift * -1);
+        String uobf = Unobfuscation(decrypted);
+        return uobf;
+    }
 }
- 
